@@ -1,0 +1,36 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: acgdemo
+spec:
+  type: NodePort
+  selector:
+    app: acgdemo
+  ports:
+  - protocol: TCP
+    port: 8080
+    nodePort: 30081
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acgdemo
+  labels:
+    app: acgdemo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: acgdemo
+  template:
+    metadata:
+      labels:
+        app: acgdemo
+    spec:
+      containers:
+      - name: container1
+        image: $DOCKER_IMAGE_NAME:$BUILD_NUMBER
+        ports:
+        - containerPort: 8080
